@@ -3,6 +3,10 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.contrib.auth import login
+# Import the login_required decorator
+from django.contrib.auth.decorators import login_required
+# Import the mixin for class-based views
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Cat, Toy
@@ -16,10 +20,12 @@ def about(request):
     return render(request, 'about.html')
 
 def cats_index(request):
-    cats = Cat.objects.all()
+    cats = Cat.objects.filter(user=request.user)
     return render(request,'cats/index.html', { 'cats': cats})
 
 # update this view function
+
+@login_required
 def cats_detail(request, cat_id):
   cat = Cat.objects.get(id=cat_id)
   # instantiate FeedingForm to be rendered in the template
@@ -35,6 +41,7 @@ def cats_detail(request, cat_id):
     'toys' : toys_cat_doesnt_have,
   })
 
+@login_required
 def add_feeding(request, cat_id):
     form = FeedingForm(request.POST)
     if form.is_valid():
@@ -43,6 +50,7 @@ def add_feeding(request, cat_id):
         new_feeding.save()
     return redirect('detail', cat_id=cat_id)
 
+@login_required
 def assoc_toy(request, cat_id, toy_id):
   # Note that you can pass a toy's id instead of the whole object
    Cat.objects.get(id=cat_id).toys.add(toy_id)
