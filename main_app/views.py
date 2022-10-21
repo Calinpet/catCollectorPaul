@@ -11,6 +11,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 import uuid
 import boto3
+print(boto3.__version__)
 from .models import Cat, Toy, Photo
 from .forms import FeedingForm
 
