@@ -1,4 +1,3 @@
-from pyexpat import model
 from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
